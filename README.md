@@ -1,75 +1,64 @@
-# React + TypeScript + Vite
+# Student Progress Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web app for tracking which students have mastered which skills and surfacing who needs support first — built to digitize a real classroom workflow: using assessment data to identify learning gaps and adjust instruction.
 
-Currently, two official plugins are available:
+**Live demo:** https://student-progress-tracker-sepia.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Note:** All student names and data in this project are fictional. No real student information is used anywhere in this app.
 
-## React Compiler
+## Why I built this
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+As a Computer Science and STEM teacher, I regularly use assessment data to figure out which students have mastered a skill and which need more support. This project turns that instinct into software — a tool that tracks skill mastery per student and highlights who needs help first, so a teacher can prioritize instruction time.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React + TypeScript, Vite, Tailwind CSS
+- **Backend:** Supabase (Postgres database + authentication)
+- **Deployment:** Vercel
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Done:**
+- Full authentication flow — signup, login, logout
+- Protected routes (unauthenticated users can't access app pages)
+- Project scaffold and styling
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**In progress:**
+- Student and skill tracking data models
+- Assessment/mastery input
+- Dashboard surfacing students who need support first
 
+## Engineering workflow
+
+This project is built using a real team-style workflow rather than committing straight to `main`:
+
+- Work is tracked via GitHub Issues and a project board
+- Features are built on separate branches
+- Changes are merged into `main` via Pull Requests
+
+## Notable fix
+
+Deployed authentication worked locally but silently failed in production due to a Vite environment variable naming issue — Vite only exposes variables prefixed with `VITE_` to the frontend. Fixed via Vercel CLI environment variable configuration.
+
+## Getting Started
+
+```bash
+# Clone the repo
+git clone https://github.com/marsharine-cs/student-progress-tracker.git
+cd student-progress-tracker
+
+# Install dependencies
+npm install
+
+# Add environment variables
+# Requires a Supabase project URL and anon key, prefixed with VITE_:
+#   VITE_SUPABASE_URL=your-supabase-url
+#   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Run locally
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## About
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Built by [Marsharine A. Simpson](https://github.com/marsharine-cs) — Computer Science Teacher and Junior Software Developer.
