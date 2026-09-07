@@ -1,6 +1,6 @@
 # Student Progress Tracker
 
-A full-stack web app for tracking which students have mastered which skills and surfacing who needs support first — built to digitize a real classroom workflow: using assessment data to identify learning gaps and adjust instruction.
+A full-stack EdTech application for securely managing students, skills, and assessment entries. The project is built from a real classroom workflow: recording assessment evidence, tracking skill mastery, and building toward a dashboard that helps teachers identify learning gaps and prioritize support.
 
 **Live demo:** https://student-progress-tracker-sepia.vercel.app
 
@@ -8,7 +8,9 @@ A full-stack web app for tracking which students have mastered which skills and 
 
 ## Why I built this
 
-As a Computer Science and STEM teacher, I regularly use assessment data to figure out which students have mastered a skill and which need more support. This project turns that instinct into software — a tool that tracks skill mastery per student and highlights who needs help first, so a teacher can prioritize instruction time.
+As a Computer Science and STEM teacher, I regularly use assessment data to determine which students have mastered a skill and which need additional support. This project translates that workflow into software.
+
+The current application supports secure access and database-backed management of students, skills, and assessment entries. A dashboard that summarizes those records and surfaces support priorities is the next major feature.
 
 ## Tech Stack
 
@@ -18,27 +20,32 @@ As a Computer Science and STEM teacher, I regularly use assessment data to figur
 
 ## Features
 
-**Done:**
-- Full authentication flow — signup, login, logout
-- Protected routes (unauthenticated users can't access app pages)
-- Project scaffold and styling
+**Implemented:**
+- Signup, login, logout, and session handling
+- Protected authenticated application access
+- Supabase-backed student records
+- Supabase-backed skill records
+- Assessment entry and assessment-history views
+- Relationships between students, skills, and assessment records
+- React component architecture with TypeScript
+- Deployed application workflow on Vercel
 
 **In progress:**
-- Student and skill tracking data models
-- Assessment/mastery input
-- Dashboard surfacing students who need support first
+- Dashboard summarizing student mastery and support priorities
+- Automated tests
+- Final repository and setup documentation
 
 ## Engineering workflow
 
-This project is built using a real team-style workflow rather than committing straight to `main`:
+This project uses a team-style Git workflow rather than committing feature work directly to `main`:
 
-- Work is tracked via GitHub Issues and a project board
-- Features are built on separate branches
-- Changes are merged into `main` via Pull Requests
+- Work is tracked with GitHub Issues and a project board
+- Features are developed on separate branches
+- Changes are merged into `main` through Pull Requests
 
 ## Notable fix
 
-Deployed authentication worked locally but silently failed in production due to a Vite environment variable naming issue — Vite only exposes variables prefixed with `VITE_` to the frontend. Fixed via Vercel CLI environment variable configuration.
+Authentication worked locally but initially failed after deployment because Vite exposes frontend environment variables only when they use the `VITE_` prefix. The production configuration was corrected through Vercel environment-variable settings.
 
 ## Getting Started
 
@@ -50,15 +57,17 @@ cd student-progress-tracker
 # Install dependencies
 npm install
 
-# Add environment variables
-# Requires a Supabase project URL and anon key, prefixed with VITE_:
-#   VITE_SUPABASE_URL=your-supabase-url
-#   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+# Copy the environment template
+cp .env.example .env.local
+
+# Add your Supabase project values to .env.local
 
 # Run locally
 npm run dev
 ```
 
+A Supabase project with the required database tables and security policies is also needed. Database setup documentation is planned as part of the remaining repository polish.
+
 ## About
 
-Built by [Marsharine A. Simpson](https://github.com/marsharine-cs) — Computer Science Teacher and Junior Software Developer.
+Built by [Marsharine A. Simpson](https://github.com/marsharine-cs) — Computer Science Teacher, EdTech Builder, and Technology Professional.
