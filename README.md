@@ -1,6 +1,6 @@
 # Student Progress Tracker
 
-A full-stack EdTech application for securely managing students, skills, and assessment entries. The project is built from a real classroom workflow: recording assessment evidence, tracking skill mastery, and building toward a dashboard that helps teachers identify learning gaps and prioritize support.
+A full-stack EdTech application for securely managing students, skills, assessment evidence, and teacher-facing progress insights. The project is built from a real classroom workflow: recording assessment evidence, tracking skill mastery, and using a dashboard to identify learning gaps and prioritize support.
 
 **Live demo:** https://student-progress-tracker-sepia.vercel.app
 
@@ -10,7 +10,7 @@ A full-stack EdTech application for securely managing students, skills, and asse
 
 As a Computer Science and STEM teacher, I regularly use assessment data to determine which students have mastered a skill and which need additional support. This project translates that workflow into software.
 
-The current application supports secure access and database-backed management of students, skills, and assessment entries. A dashboard that summarizes those records and surfaces support priorities is the next major feature.
+The application supports secure access, database-backed management of students and skills, dated assessment history, and a teacher dashboard that summarizes mastery distribution, support priorities, skill-level difficulty, and recent activity.
 
 ## Tech Stack
 
@@ -23,17 +23,24 @@ The current application supports secure access and database-backed management of
 **Implemented:**
 - Signup, login, logout, and session handling
 - Protected authenticated application access
-- Supabase-backed student records
-- Supabase-backed skill records
-- Assessment entry and assessment-history views
+- Supabase-backed student records with create, edit, list, and delete workflows
+- Supabase-backed skill records with create, edit, list, and delete workflows
+- Assessment entry and dated assessment-history views
+- Mastery statuses: mastered, partial, and needs help
 - Relationships between students, skills, and assessment records
-- React component architecture with TypeScript
+- Teacher dashboard with total-record summaries
+- Mastery-distribution visualization
+- Students-needing-support ranking
+- Skills-needing-attention ranking
+- Recent assessment activity
+- Loading, empty, and error states for dashboard data
+- Responsive React component architecture with TypeScript
 - Deployed application workflow on Vercel
 
 **In progress:**
-- Dashboard summarizing student mastery and support priorities
 - Automated tests
-- Final repository and setup documentation
+- Final database/setup documentation
+- Final repository polish and production QA
 
 ## Engineering workflow
 
