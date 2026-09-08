@@ -18,7 +18,7 @@ type AssessmentEntry = {
   student_id: string
   skill_id: string
   status: MasteryStatus
-  created_at: string
+  assessed_at: string
 }
 
 type StudentSupportRow = {
@@ -70,8 +70,8 @@ function DashboardPage() {
         supabase.from('skills').select('id, name').order('name'),
         supabase
           .from('assessment_entries')
-          .select('id, student_id, skill_id, status, created_at')
-          .order('created_at', { ascending: false }),
+          .select('id, student_id, skill_id, status, assessed_at')
+          .order('assessed_at', { ascending: false }),
       ])
 
       if (!isMounted) {
@@ -267,7 +267,7 @@ function DashboardPage() {
                   <>
                     <p className="text-2xl font-bold text-white">{studentSupport[0].name}</p>
                     <p className="mt-2 text-slate-400">
-                      {studentSupport[0].needsHelp} needs-help and {studentSupport[0].partial} partial assessment entr{studentSupport[0].total === 1 ? 'y' : 'ies'}.
+                      {studentSupport[0].needsHelp} needs-help and {studentSupport[0].partial} partial assessment signals across {studentSupport[0].total} recorded entries.
                     </p>
                   </>
                 ) : (
@@ -324,8 +324,8 @@ function DashboardPage() {
                       <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${STATUS_BADGES[entry.status]}`}>
                         {STATUS_LABELS[entry.status]}
                       </span>
-                      <time className="text-xs text-slate-500" dateTime={entry.created_at}>
-                        {new Date(entry.created_at).toLocaleDateString()}
+                      <time className="text-xs text-slate-500" dateTime={entry.assessed_at}>
+                        {new Date(entry.assessed_at).toLocaleDateString()}
                       </time>
                     </div>
                   </div>
