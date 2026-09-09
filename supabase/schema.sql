@@ -54,52 +54,52 @@ alter table public.skills             enable row level security;
 alter table public.assessment_entries enable row level security;
 
 -- students -----------------------------------------------------------------
-drop policy if exists "students: select own" on public.students;
-create policy "students: select own" on public.students
+drop policy if exists "Users can view their own students" on public.students;
+create policy "Users can view their own students" on public.students
   for select to authenticated using (user_id = auth.uid());
 
-drop policy if exists "students: insert own" on public.students;
-create policy "students: insert own" on public.students
+drop policy if exists "Users can insert their own students" on public.students;
+create policy "Users can insert their own students" on public.students
   for insert to authenticated with check (user_id = auth.uid());
 
-drop policy if exists "students: update own" on public.students;
-create policy "students: update own" on public.students
+drop policy if exists "Users can update their own students" on public.students;
+create policy "Users can update their own students" on public.students
   for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
 
-drop policy if exists "students: delete own" on public.students;
-create policy "students: delete own" on public.students
+drop policy if exists "Users can delete their own students" on public.students;
+create policy "Users can delete their own students" on public.students
   for delete to authenticated using (user_id = auth.uid());
 
 -- skills -------------------------------------------------------------------
-drop policy if exists "skills: select own" on public.skills;
-create policy "skills: select own" on public.skills
+drop policy if exists "Users can view their own skills" on public.skills;
+create policy "Users can view their own skills" on public.skills
   for select to authenticated using (user_id = auth.uid());
 
-drop policy if exists "skills: insert own" on public.skills;
-create policy "skills: insert own" on public.skills
+drop policy if exists "Users can insert their own skills" on public.skills;
+create policy "Users can insert their own skills" on public.skills
   for insert to authenticated with check (user_id = auth.uid());
 
-drop policy if exists "skills: update own" on public.skills;
-create policy "skills: update own" on public.skills
+drop policy if exists "Users can update their own skills" on public.skills;
+create policy "Users can update their own skills" on public.skills
   for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
 
-drop policy if exists "skills: delete own" on public.skills;
-create policy "skills: delete own" on public.skills
+drop policy if exists "Users can delete their own skills" on public.skills;
+create policy "Users can delete their own skills" on public.skills
   for delete to authenticated using (user_id = auth.uid());
 
 -- assessment_entries -------------------------------------------------------
-drop policy if exists "assessment_entries: select own" on public.assessment_entries;
-create policy "assessment_entries: select own" on public.assessment_entries
+drop policy if exists "Users can view their own assessment entries" on public.assessment_entries;
+create policy "Users can view their own assessment entries" on public.assessment_entries
   for select to authenticated using (user_id = auth.uid());
 
-drop policy if exists "assessment_entries: insert own" on public.assessment_entries;
-create policy "assessment_entries: insert own" on public.assessment_entries
+drop policy if exists "Users can insert their own assessment entries" on public.assessment_entries;
+create policy "Users can insert their own assessment entries" on public.assessment_entries
   for insert to authenticated with check (user_id = auth.uid());
 
-drop policy if exists "assessment_entries: update own" on public.assessment_entries;
-create policy "assessment_entries: update own" on public.assessment_entries
+drop policy if exists "Users can update their own assessment entries" on public.assessment_entries;
+create policy "Users can update their own assessment entries" on public.assessment_entries
   for update to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
 
-drop policy if exists "assessment_entries: delete own" on public.assessment_entries;
-create policy "assessment_entries: delete own" on public.assessment_entries
+drop policy if exists "Users can delete their own assessment entries" on public.assessment_entries;
+create policy "Users can delete their own assessment entries" on public.assessment_entries
   for delete to authenticated using (user_id = auth.uid());
