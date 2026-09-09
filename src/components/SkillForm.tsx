@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { Skill } from '../types/Skill'
 
@@ -9,14 +9,11 @@ interface SkillFormProps {
 }
 
 export default function SkillForm({ editingSkill, onSaved, onCancelEdit }: SkillFormProps) {
-  const [name, setName] = useState('')
+  // The parent remounts this form (via `key`) whenever the editing target
+  // changes, so initializing state from props here is safe.
+  const [name, setName] = useState(editingSkill?.name ?? '')
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    setName(editingSkill?.name ?? '')
-    setError(null)
-  }, [editingSkill])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
