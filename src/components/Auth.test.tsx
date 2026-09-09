@@ -3,19 +3,21 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import Auth from './Auth'
 
-const { signUp, signInWithPassword } = vi.hoisted(() => ({
+const { signUp, signInWithPassword, resetPasswordForEmail } = vi.hoisted(() => ({
   signUp: vi.fn(),
   signInWithPassword: vi.fn(),
+  resetPasswordForEmail: vi.fn(),
 }))
 
 vi.mock('../lib/supabaseClient', () => ({
-  supabase: { auth: { signUp, signInWithPassword } },
+  supabase: { auth: { signUp, signInWithPassword, resetPasswordForEmail } },
 }))
 
 describe('Auth', () => {
   beforeEach(() => {
     signUp.mockReset()
     signInWithPassword.mockReset()
+    resetPasswordForEmail.mockReset()
   })
 
   it('starts in sign-up mode and can switch to log in', async () => {
@@ -52,5 +54,25 @@ describe('Auth', () => {
 
     expect(signInWithPassword).toHaveBeenCalledWith({ email: 'teacher@example.com', password: 'wrongpass' })
     expect(await screen.findByText('Invalid login credentials')).toBeInTheDocument()
+  })
+
+  it('sends a reset link back to this site and confirms', async () => {
+    resetPasswordForEmail.mockResolvedValue({ error: null })
+    const user = userEvent.setup()
+    render(<Auth />)
+
+    await user.click(screen.getByRole('button', { name: /already have an account/i }))
+    await user.click(screen.getByRole('button', { name: /forgot your password/i }))
+
+    expect(screen.getByRole('heading', { name: /reset password/i })).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('Password')).not.toBeInTheDocument()
+
+    await user.type(screen.getByPlaceholderText('Email'), 'teacher@example.com')
+    await user.click(screen.getByRole('button', { name: /send reset link/i }))
+
+    expect(resetPasswordForEmail).toHaveBeenCalledWith('teacher@example.com', {
+      redirectTo: window.location.origin,
+    })
+    expect(await screen.findByText(/check your email/i)).toBeInTheDocument()
   })
 })
