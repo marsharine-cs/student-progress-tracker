@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { countStatuses, percentOf, rankBySupportNeed } from '../lib/dashboardStats'
+import type { AssessmentStatus } from '../types/AssessmentEntry'
 
-type MasteryStatus = 'mastered' | 'partial' | 'needs_help'
+type MasteryStatus = AssessmentStatus
 
 type Student = {
   id: string
@@ -19,24 +21,6 @@ type AssessmentEntry = {
   skill_id: string
   status: MasteryStatus
   assessed_at: string
-}
-
-type StudentSupportRow = {
-  id: string
-  name: string
-  needsHelp: number
-  partial: number
-  mastered: number
-  total: number
-}
-
-type SkillDifficultyRow = {
-  id: string
-  name: string
-  needsHelp: number
-  partial: number
-  mastered: number
-  total: number
 }
 
 const STATUS_LABELS: Record<MasteryStatus, string> = {
@@ -109,83 +93,17 @@ function DashboardPage() {
     [skills],
   )
 
-  const statusCounts = useMemo(() => {
-    return assessments.reduce(
-      (counts, entry) => {
-        counts[entry.status] += 1
-        return counts
-      },
-      { mastered: 0, partial: 0, needs_help: 0 } as Record<MasteryStatus, number>,
-    )
-  }, [assessments])
+  const statusCounts = useMemo(() => countStatuses(assessments), [assessments])
 
-  const studentSupport = useMemo<StudentSupportRow[]>(() => {
-    const rows = new Map<string, StudentSupportRow>()
+  const studentSupport = useMemo(
+    () => rankBySupportNeed(students, assessments, (entry) => entry.student_id),
+    [assessments, students],
+  )
 
-    students.forEach((student) => {
-      rows.set(student.id, {
-        id: student.id,
-        name: student.name,
-        needsHelp: 0,
-        partial: 0,
-        mastered: 0,
-        total: 0,
-      })
-    })
-
-    assessments.forEach((entry) => {
-      const row = rows.get(entry.student_id)
-      if (!row) return
-
-      row.total += 1
-      if (entry.status === 'needs_help') row.needsHelp += 1
-      if (entry.status === 'partial') row.partial += 1
-      if (entry.status === 'mastered') row.mastered += 1
-    })
-
-    return [...rows.values()]
-      .filter((row) => row.total > 0)
-      .sort((a, b) => {
-        if (b.needsHelp !== a.needsHelp) return b.needsHelp - a.needsHelp
-        if (b.partial !== a.partial) return b.partial - a.partial
-        return a.name.localeCompare(b.name)
-      })
-      .slice(0, 5)
-  }, [assessments, students])
-
-  const skillDifficulty = useMemo<SkillDifficultyRow[]>(() => {
-    const rows = new Map<string, SkillDifficultyRow>()
-
-    skills.forEach((skill) => {
-      rows.set(skill.id, {
-        id: skill.id,
-        name: skill.name,
-        needsHelp: 0,
-        partial: 0,
-        mastered: 0,
-        total: 0,
-      })
-    })
-
-    assessments.forEach((entry) => {
-      const row = rows.get(entry.skill_id)
-      if (!row) return
-
-      row.total += 1
-      if (entry.status === 'needs_help') row.needsHelp += 1
-      if (entry.status === 'partial') row.partial += 1
-      if (entry.status === 'mastered') row.mastered += 1
-    })
-
-    return [...rows.values()]
-      .filter((row) => row.total > 0)
-      .sort((a, b) => {
-        if (b.needsHelp !== a.needsHelp) return b.needsHelp - a.needsHelp
-        if (b.partial !== a.partial) return b.partial - a.partial
-        return a.name.localeCompare(b.name)
-      })
-      .slice(0, 5)
-  }, [assessments, skills])
+  const skillDifficulty = useMemo(
+    () => rankBySupportNeed(skills, assessments, (entry) => entry.skill_id),
+    [assessments, skills],
+  )
 
   const recentAssessments = assessments.slice(0, 6)
 
@@ -229,7 +147,7 @@ function DashboardPage() {
         <SummaryCard
           label="Need Help"
           value={statusCounts.needs_help}
-          note={assessments.length ? `${Math.round((statusCounts.needs_help / assessments.length) * 100)}% of entries` : 'No entries yet'}
+          note={assessments.length ? `${percentOf(statusCounts.needs_help, assessments.length)}% of entries` : 'No entries yet'}
         />
       </div>
 
@@ -363,7 +281,7 @@ type DistributionRowProps = {
 }
 
 function DistributionRow({ label, count, total, barClass }: DistributionRowProps) {
-  const percentage = total ? Math.round((count / total) * 100) : 0
+  const percentage = percentOf(count, total)
 
   return (
     <div>
