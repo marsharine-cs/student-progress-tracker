@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { buildLatestStatusByPair } from '../lib/dashboardGrid'
 import type { Student } from '../types/Student'
 import type { Skill } from '../types/Skill'
 import type { AssessmentEntry, AssessmentStatus } from '../types/AssessmentEntry'
@@ -48,15 +49,8 @@ export default function DashboardPage() {
         setStudents(studentsRes.data ?? [])
         setSkills(skillsRes.data ?? [])
 
-        const lookup: Record<string, AssessmentStatus> = {}
         const entries = (entriesRes.data as Pick<AssessmentEntry, 'student_id' | 'skill_id' | 'status'>[]) ?? []
-        for (const entry of entries) {
-          const key = `${entry.student_id}-${entry.skill_id}`
-          if (!(key in lookup)) {
-            lookup[key] = entry.status
-          }
-        }
-        setLatestByPair(lookup)
+        setLatestByPair(buildLatestStatusByPair(entries))
       }
 
       setLoading(false)

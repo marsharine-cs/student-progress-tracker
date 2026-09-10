@@ -10,7 +10,7 @@ A full-stack EdTech application for securely managing students, skills, assessme
 
 As a Computer Science and STEM teacher, I regularly use assessment data to determine which students have mastered a skill and which need additional support. This project translates that workflow into software.
 
-The application supports secure access, database-backed management of students and skills, dated assessment history, and a teacher dashboard that summarizes mastery distribution, support priorities, skill-level difficulty, and recent activity.
+The application supports secure access, database-backed management of students and skills, dated assessment history, and a teacher dashboard that shows every student's mastery status across every skill at a glance, as a color-coded grid.
 
 ## Tech Stack
 
@@ -21,22 +21,18 @@ The application supports secure access, database-backed management of students a
 ## Features
 
 **Implemented:**
-- Signup, login, logout, and session handling
+- Signup, login, logout, password reset, and session handling
 - Protected authenticated application access
 - Supabase-backed student records with create, edit, list, and delete workflows
 - Supabase-backed skill records with create, edit, list, and delete workflows
 - Assessment entry and dated assessment-history views
 - Mastery statuses: mastered, partial, and needs help
 - Relationships between students, skills, and assessment records
-- Teacher dashboard with total-record summaries
-- Mastery-distribution visualization
-- Students-needing-support ranking
-- Skills-needing-attention ranking
-- Recent assessment activity
+- Teacher dashboard: a students x skills grid, color-coded by each pair's most recent mastery status
 - Loading, empty, and error states for dashboard data
 - Responsive React component architecture with TypeScript
 - Row Level Security policies so each teacher sees only their own data
-- Automated tests with Vitest and Testing Library (dashboard calculations, assessment form, auth screen)
+- Automated tests with Vitest and Testing Library (dashboard grid calculations, student/skill/assessment forms, auth and password-reset screens)
 - Deployed application workflow on Vercel
 
 **Remaining:**
@@ -54,6 +50,7 @@ This project uses a team-style Git workflow rather than committing feature work 
 
 - Authentication worked locally but initially failed after deployment because Vite exposes frontend environment variables only when they use the `VITE_` prefix. The production configuration was corrected through Vercel environment-variable settings.
 - Tailwind was installed but never registered in the Vite config, so the production stylesheet contained none of the utility classes the components use. Registering the `@tailwindcss/vite` plugin and importing Tailwind in `src/index.css` fixed it.
+- Deleting a Supabase auth user failed because `assessment_entries`, `students`, and `skills` referenced `auth.users` without `on delete cascade`. See [`supabase/fix-user-delete-cascade.sql`](supabase/fix-user-delete-cascade.sql).
 
 ## Getting Started
 
