@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { Skill } from '../types/Skill'
 import SkillForm from './SkillForm'
@@ -10,34 +10,47 @@ export default function SkillsPage() {
   const [error, setError] = useState<string | null>(null)
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
 
-  const fetchSkills = useCallback(async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('skills')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      setError(error.message)
-    } else {
-      setSkills(data)
-    }
-    setLoading(false)
-  }, [])
+  const [refreshKey, setRefreshKey] = useState(0)
+  const refresh = () => setRefreshKey((key) => key + 1)
 
   useEffect(() => {
-    fetchSkills()
-  }, [fetchSkills])
+    let active = true
+
+    async function load() {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('skills')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (!active) return
+
+      if (error) {
+        setError(error.message)
+      } else {
+        setError(null)
+        setSkills(data)
+      }
+      setLoading(false)
+    }
+
+    load()
+
+    return () => {
+      active = false
+    }
+  }, [refreshKey])
 
   const handleSaved = () => {
     setEditingSkill(null)
-    fetchSkills()
+    refresh()
   }
 
   return (
     <div className="max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-white mb-4">Skills</h2>
       <SkillForm
+        key={editingSkill?.id ?? 'new'}
         editingSkill={editingSkill}
         onSaved={handleSaved}
         onCancelEdit={() => setEditingSkill(null)}
@@ -45,7 +58,7 @@ export default function SkillsPage() {
       {loading && <p className="text-slate-400">Loading skills...</p>}
       {error && <p className="text-red-400">{error}</p>}
       {!loading && !error && (
-        <SkillList skills={skills} onEdit={setEditingSkill} onDeleted={fetchSkills} />
+        <SkillList skills={skills} onEdit={setEditingSkill} onDeleted={refresh} />
       )}
     </div>
   )

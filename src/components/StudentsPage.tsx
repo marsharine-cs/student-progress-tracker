@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { Student } from '../types/Student'
 import StudentForm from './StudentForm'
@@ -10,34 +10,47 @@ export default function StudentsPage() {
   const [error, setError] = useState<string | null>(null)
   const [editingStudent, setEditingStudent] = useState<Student | null>(null)
 
-  const fetchStudents = useCallback(async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('students')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      setError(error.message)
-    } else {
-      setStudents(data)
-    }
-    setLoading(false)
-  }, [])
+  const [refreshKey, setRefreshKey] = useState(0)
+  const refresh = () => setRefreshKey((key) => key + 1)
 
   useEffect(() => {
-    fetchStudents()
-  }, [fetchStudents])
+    let active = true
+
+    async function load() {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('students')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (!active) return
+
+      if (error) {
+        setError(error.message)
+      } else {
+        setError(null)
+        setStudents(data)
+      }
+      setLoading(false)
+    }
+
+    load()
+
+    return () => {
+      active = false
+    }
+  }, [refreshKey])
 
   const handleSaved = () => {
     setEditingStudent(null)
-    fetchStudents()
+    refresh()
   }
 
   return (
     <div className="max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-white mb-4">Students</h2>
       <StudentForm
+        key={editingStudent?.id ?? 'new'}
         editingStudent={editingStudent}
         onSaved={handleSaved}
         onCancelEdit={() => setEditingStudent(null)}
@@ -48,7 +61,7 @@ export default function StudentsPage() {
         <StudentList
           students={students}
           onEdit={setEditingStudent}
-          onDeleted={fetchStudents}
+          onDeleted={refresh}
         />
       )}
     </div>

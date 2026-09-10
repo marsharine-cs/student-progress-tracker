@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { Student } from '../types/Student'
 
@@ -9,18 +9,13 @@ interface StudentFormProps {
 }
 
 export default function StudentForm({ editingStudent, onSaved, onCancelEdit }: StudentFormProps) {
-  const [name, setName] = useState('')
-  const [gradeLevel, setGradeLevel] = useState('')
-  const [notes, setNotes] = useState('')
+  // The parent remounts this form (via `key`) whenever the editing target
+  // changes, so initializing state from props here is safe.
+  const [name, setName] = useState(editingStudent?.name ?? '')
+  const [gradeLevel, setGradeLevel] = useState(editingStudent?.grade_level ?? '')
+  const [notes, setNotes] = useState(editingStudent?.notes ?? '')
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    setName(editingStudent?.name ?? '')
-    setGradeLevel(editingStudent?.grade_level ?? '')
-    setNotes(editingStudent?.notes ?? '')
-    setError(null)
-  }, [editingStudent])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabaseClient'
 import Auth from './components/Auth'
+import UpdatePassword from './components/UpdatePassword'
 import DashboardPage from './components/DashboardPage'
 import StudentsPage from './components/StudentsPage'
 import SkillsPage from './components/SkillsPage'
@@ -27,6 +28,7 @@ function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
+  const [recoveringPassword, setRecoveringPassword] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -35,8 +37,12 @@ function App() {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session)
+        // Fired when the user arrives from a password-reset email link.
+        if (event === 'PASSWORD_RECOVERY') {
+          setRecoveringPassword(true)
+        }
       }
     )
 
@@ -57,6 +63,10 @@ function App() {
 
   if (!session) {
     return <Auth />
+  }
+
+  if (recoveringPassword) {
+    return <UpdatePassword onDone={() => setRecoveringPassword(false)} />
   }
 
   return (
