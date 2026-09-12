@@ -1,95 +1,133 @@
 # Student Progress Tracker
 
-A full-stack EdTech application for securely managing students, skills, assessment evidence, and teacher-facing progress insights. The project is built from a real classroom workflow: recording assessment evidence, tracking skill mastery, and using a dashboard to identify learning gaps and prioritize support.
+**Full-stack EdTech · React · TypeScript · Supabase · Assessment data · Teacher dashboard**
+
+A full-stack classroom application for recording assessment evidence, tracking skill mastery, and helping teachers quickly identify where students need support.
 
 **Live demo:** https://student-progress-tracker-sepia.vercel.app
 
-**Note:** All student names and data in this project are fictional. No real student information is used anywhere in this app.
+> All student names and records in this project are fictional. No real student information is used in the demo or repository.
 
-## Why I built this
+## Why I built it
 
-As a Computer Science and STEM teacher, I regularly use assessment data to determine which students have mastered a skill and which need additional support. This project translates that workflow into software.
+As an educator, I routinely use assessment results to decide who has mastered a skill, who is partially there, and who needs reteaching. This project turns that classroom workflow into a database-backed application.
 
-The application supports secure access, database-backed management of students and skills, dated assessment history, and a teacher dashboard that shows every student's mastery status across every skill at a glance, as a color-coded grid.
+Instead of keeping progress in disconnected notes or spreadsheets, the app links **students, skills, and dated assessment evidence** and summarizes the latest mastery status in a teacher-facing dashboard.
 
-## Tech Stack
+## What the application does
 
-- **Frontend:** React + TypeScript, Vite, Tailwind CSS
-- **Backend:** Supabase (Postgres database + authentication)
-- **Deployment:** Vercel
+- secure signup, login, logout, password reset, and session handling
+- protected authenticated application routes
+- create, edit, list, and delete student records
+- create, edit, list, and delete skill records
+- enter dated assessment evidence
+- view assessment history over time
+- track three mastery states: **mastered, partial, needs help**
+- display a students × skills mastery grid using each pair's most recent status
+- isolate each teacher's data through Supabase Row Level Security
+- provide loading, empty, and error states for core workflows
+- run automated tests for dashboard calculations, forms, authentication, and password reset
+- deploy through Vercel
 
-## Features
+## Tech stack
 
-**Implemented:**
-- Signup, login, logout, password reset, and session handling
-- Protected authenticated application access
-- Supabase-backed student records with create, edit, list, and delete workflows
-- Supabase-backed skill records with create, edit, list, and delete workflows
-- Assessment entry and dated assessment-history views
-- Mastery statuses: mastered, partial, and needs help
-- Relationships between students, skills, and assessment records
-- Teacher dashboard: a students x skills grid, color-coded by each pair's most recent mastery status
-- Loading, empty, and error states for dashboard data
-- Responsive React component architecture with TypeScript
-- Row Level Security policies so each teacher sees only their own data
-- Automated tests with Vitest and Testing Library (dashboard grid calculations, student/skill/assessment forms, auth and password-reset screens)
-- Deployed application workflow on Vercel
+| Layer | Technology |
+|---|---|
+| Frontend | React, TypeScript, Vite |
+| Styling | Tailwind CSS |
+| Backend | Supabase |
+| Database | PostgreSQL via Supabase |
+| Authentication | Supabase Auth |
+| Security | Row Level Security policies |
+| Testing | Vitest, Testing Library |
+| Deployment | Vercel |
+| Workflow | GitHub Issues, branches, pull requests |
 
-**Remaining:**
-- Final production QA on the live site
+## Engineering highlights
 
-## Engineering workflow
+### Data isolation
 
-This project uses a team-style Git workflow rather than committing feature work directly to `main`:
+The app uses Row Level Security so authenticated teachers can only read and write rows associated with their own user account.
 
-- Work is tracked with GitHub Issues and a project board
-- Features are developed on separate branches
-- Changes are merged into `main` through Pull Requests
+### Assessment history instead of one static score
 
-## Notable fixes
+Assessment records are dated. The dashboard derives the current mastery state from the most recent evidence for each student-skill pair, while the history remains available for review.
 
-- Authentication worked locally but initially failed after deployment because Vite exposes frontend environment variables only when they use the `VITE_` prefix. The production configuration was corrected through Vercel environment-variable settings.
-- Tailwind was installed but never registered in the Vite config, so the production stylesheet contained none of the utility classes the components use. Registering the `@tailwindcss/vite` plugin and importing Tailwind in `src/index.css` fixed it.
-- Deleting a Supabase auth user failed because `assessment_entries`, `students`, and `skills` referenced `auth.users` without `on delete cascade`. See [`supabase/fix-user-delete-cascade.sql`](supabase/fix-user-delete-cascade.sql).
+### Real deployment debugging
 
-## Getting Started
+Several issues only became visible when moving from local development to production:
+
+- Vite environment variables had to use the `VITE_` prefix before the deployed frontend could read the Supabase configuration.
+- Tailwind was installed but not registered with Vite, so production CSS initially omitted required utility classes.
+- Account deletion exposed missing cascade behavior across tables referencing `auth.users`; the schema was corrected so related application records can be handled safely.
+
+These fixes are documented because deployment and debugging are part of the engineering work, not separate from it.
+
+## Project workflow
+
+Feature work follows a team-style process rather than being committed directly to `main`:
+
+1. define work in GitHub Issues
+2. develop on a feature branch
+3. test locally
+4. open a Pull Request
+5. review the change
+6. merge into `main`
+
+That workflow was used to build the app incrementally and to keep implementation decisions visible.
+
+## Local setup
 
 ```bash
-# Clone the repo
 git clone https://github.com/marsharine-cs/student-progress-tracker.git
 cd student-progress-tracker
-
-# Install dependencies
 npm install
-
-# Copy the environment template
 cp .env.example .env.local
-
-# Add your Supabase project values to .env.local
-
-# Run locally
 npm run dev
 ```
 
+Add your Supabase project URL and anon key to `.env.local` before running the application.
+
 ### Database setup
 
-The app expects three tables in your Supabase project, each protected by Row Level Security so a teacher can only read and write their own rows.
+1. Create a Supabase project.
+2. Open **SQL Editor** in Supabase.
+3. Run [`supabase/schema.sql`](supabase/schema.sql).
+4. Add the project URL and anon key to `.env.local`.
 
-1. Create a Supabase project and copy its URL and anon key into `.env.local`.
-2. In the Supabase dashboard open **SQL Editor**, create a new query, paste the contents of [`supabase/schema.sql`](supabase/schema.sql), and run it.
+The schema creates the core tables, indexes, and per-user policies. A read-only inspection script is available at [`supabase/inspect.sql`](supabase/inspect.sql).
 
-That file creates the `students`, `skills`, and `assessment_entries` tables, their indexes, and the per-user policies. It is safe to run more than once. To compare an existing project against it, run the read-only [`supabase/inspect.sql`](supabase/inspect.sql).
-
-### Scripts
+### Useful scripts
 
 ```bash
-npm run dev       # start the dev server
-npm test          # run the test suite once
+npm run dev
+npm test
 npm run test:watch
-npm run lint      # ESLint
-npm run build     # typecheck and production build
+npm run lint
+npm run build
 ```
 
-## About
+## Current status
 
-Built by [Marsharine A. Simpson](https://github.com/marsharine-cs) — Computer Science Teacher, EdTech Builder, and Technology Professional.
+Core application functionality is implemented and deployed. Remaining work is focused on final production QA and future enhancements rather than establishing the basic product workflow.
+
+## What this project demonstrates
+
+- full-stack application development
+- React and TypeScript component work
+- relational data modeling
+- authentication and authorization
+- database-backed CRUD workflows
+- assessment-data logic
+- automated testing
+- production debugging
+- Git/GitHub collaboration practices
+- EdTech product thinking grounded in a real teaching workflow
+
+## About the developer
+
+Built by **[Marsharine A. Simpson](https://github.com/marsharine-cs)** — Computer Science educator, curriculum developer, EdTech builder, and technology professional.
+
+- [Professional portfolio](https://projectsportfolio-nine.vercel.app/)
+- [LinkedIn](https://www.linkedin.com/in/marsharine-a-simpson/)
+- [Computer Science curriculum repository](https://github.com/marsharine-cs/computer-science-secondary-curriculum)
