@@ -18,23 +18,27 @@ create table if not exists public.students (
   name        text not null,
   grade_level text,
   notes       text,
-  created_at  timestamptz not null default now()
+  created_at  timestamptz not null default now(),
+  unique (id, user_id)
 );
 
 create table if not exists public.skills (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid not null default auth.uid() references auth.users (id) on delete cascade,
   name       text not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  unique (id, user_id)
 );
 
 create table if not exists public.assessment_entries (
   id          uuid primary key default gen_random_uuid(),
   user_id     uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  student_id  uuid not null references public.students (id) on delete cascade,
-  skill_id    uuid not null references public.skills (id) on delete cascade,
+  student_id  uuid not null,
+  skill_id    uuid not null,
   status      text not null check (status in ('mastered', 'partial', 'needs_help')),
-  assessed_at timestamptz not null default now()
+  assessed_at timestamptz not null default now(),
+  foreign key (student_id, user_id) references public.students (id, user_id) on delete cascade,
+  foreign key (skill_id, user_id) references public.skills (id, user_id) on delete cascade
 );
 
 -- Indexes for the joins and orderings the app performs.

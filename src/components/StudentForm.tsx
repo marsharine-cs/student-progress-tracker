@@ -49,29 +49,38 @@ export default function StudentForm({ editingStudent, onSaved, onCancelEdit }: S
       onSubmit={handleSubmit}
       className="bg-slate-800 rounded p-4 mb-6 flex flex-col gap-3"
     >
+      <label htmlFor="student-name" className="text-sm font-semibold text-slate-200">Student name</label>
       <input
+        id="student-name"
+        name="student-name"
         type="text"
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       />
+      <label htmlFor="grade-level" className="text-sm font-semibold text-slate-200">Grade level <span className="font-normal text-slate-400">(optional)</span></label>
       <input
+        id="grade-level"
+        name="grade-level"
         type="text"
         placeholder="Grade level (optional)"
         value={gradeLevel}
         onChange={(e) => setGradeLevel(e.target.value)}
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       />
+      <label htmlFor="student-notes" className="text-sm font-semibold text-slate-200">Notes <span className="font-normal text-slate-400">(optional)</span></label>
       <input
+        id="student-notes"
+        name="student-notes"
         type="text"
         placeholder="Notes (optional)"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       />
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
       <div className="flex gap-2">
         <button
           type="submit"

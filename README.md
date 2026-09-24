@@ -47,7 +47,7 @@ Instead of keeping progress in disconnected notes or spreadsheets, the app links
 
 ### Data isolation
 
-The app uses Row Level Security so authenticated teachers can only read and write rows associated with their own user account.
+The app uses Row Level Security so authenticated teachers can only read and write rows associated with their own user account. Composite tenant-aware foreign keys also prevent an assessment from referencing a student or skill owned by another account.
 
 ### Assessment history instead of one static score
 
@@ -95,7 +95,7 @@ Add your Supabase project URL and anon key to `.env.local` before running the ap
 3. Run [`supabase/schema.sql`](supabase/schema.sql).
 4. Add the project URL and anon key to `.env.local`.
 
-The schema creates the core tables, indexes, and per-user policies. A read-only inspection script is available at [`supabase/inspect.sql`](supabase/inspect.sql).
+The schema creates the core tables, tenant-aware foreign keys, indexes, and per-user policies. Existing deployments can apply [`supabase/harden-tenant-boundaries.sql`](supabase/harden-tenant-boundaries.sql). A read-only inspection script is available at [`supabase/inspect.sql`](supabase/inspect.sql).
 
 ### Useful scripts
 
@@ -129,5 +129,4 @@ Core application functionality is implemented and deployed. Remaining work is fo
 Built by **[Marsharine A. Simpson](https://github.com/marsharine-cs)** — Computer Science educator, curriculum developer, EdTech builder, and technology professional.
 
 - [Professional portfolio](https://projectsportfolio-nine.vercel.app/)
-- [LinkedIn](https://www.linkedin.com/in/marsharine-a-simpson/)
 - [Computer Science curriculum repository](https://github.com/marsharine-cs/computer-science-secondary-curriculum)

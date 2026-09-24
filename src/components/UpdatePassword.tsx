@@ -44,24 +44,30 @@ function UpdatePassword({ onDone }: UpdatePasswordProps) {
       >
         <h1 className="text-2xl font-bold text-white text-center">Choose a New Password</h1>
 
+        <label htmlFor="new-password" className="text-sm font-semibold text-slate-200">New password</label>
         <input
+          id="new-password"
+          name="new-password"
           type="password"
           placeholder="New password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
-          className="p-2 rounded bg-slate-700 text-white outline-none"
+          className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
         />
 
+        <label htmlFor="confirm-password" className="text-sm font-semibold text-slate-200">Confirm new password</label>
         <input
+          id="confirm-password"
+          name="confirm-password"
           type="password"
           placeholder="Confirm new password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           required
           minLength={6}
-          className="p-2 rounded bg-slate-700 text-white outline-none"
+          className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
         />
 
         <button
@@ -72,7 +78,7 @@ function UpdatePassword({ onDone }: UpdatePasswordProps) {
           {saving ? 'Saving...' : 'Save Password'}
         </button>
 
-        {error && <p className="text-sm text-center text-red-400">{error}</p>}
+        {error && <p role="alert" className="text-sm text-center text-red-400">{error}</p>}
       </form>
     </div>
   )

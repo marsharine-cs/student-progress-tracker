@@ -82,7 +82,20 @@ export default function DashboardPage() {
   return (
     <div className="max-w-full overflow-x-auto">
       <h2 className="text-2xl font-bold text-white mb-4">Dashboard</h2>
+      <div className="mb-4 flex flex-wrap gap-4 text-sm text-slate-200" aria-label="Mastery status legend">
+        {(Object.keys(STATUS_LABELS) as AssessmentStatus[]).map((status) => (
+          <span key={status} className="inline-flex items-center gap-2">
+            <span aria-hidden="true" className={`inline-block h-4 w-4 rounded ${STATUS_STYLES[status]}`} />
+            {STATUS_LABELS[status]}
+          </span>
+        ))}
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden="true" className="inline-block h-4 w-4 rounded border border-slate-600 bg-slate-800" />
+          Not assessed
+        </span>
+      </div>
       <table className="border-collapse">
+        <caption className="sr-only">Current mastery status by student and skill</caption>
         <thead>
           <tr>
             <th className="text-left text-slate-400 font-normal p-2">Student</th>
@@ -107,6 +120,8 @@ export default function DashboardPage() {
                 return (
                   <td key={skill.id} className="p-2 text-center">
                     <span
+                      role="img"
+                      aria-label={`${student.name}, ${skill.name}: ${status ? STATUS_LABELS[status] : 'Not assessed'}`}
                       title={status ? STATUS_LABELS[status] : 'Not assessed'}
                       className={`inline-block w-8 h-8 rounded border border-slate-600 ${
                         status ? STATUS_STYLES[status] : 'bg-slate-800'
