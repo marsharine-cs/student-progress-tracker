@@ -75,25 +75,33 @@ function Auth() {
       >
         <h1 className="text-2xl font-bold text-white text-center">{TITLES[mode]}</h1>
 
+        <label htmlFor="email" className="text-sm font-semibold text-slate-200">Email address</label>
         <input
+          id="email"
+          name="email"
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="p-2 rounded bg-slate-700 text-white outline-none"
+          className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
         />
 
         {mode !== 'forgot' && (
-          <input
+          <div className="flex flex-col gap-2">
+            <label htmlFor="password" className="text-sm font-semibold text-slate-200">Password</label>
+            <input
+            id="password"
+            name="password"
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="p-2 rounded bg-slate-700 text-white outline-none"
+            className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
           />
+          </div>
         )}
 
         <button
@@ -105,7 +113,7 @@ function Auth() {
         </button>
 
         {message && (
-          <p className={`text-sm text-center ${isError ? 'text-red-400' : 'text-emerald-400'}`}>
+          <p role={isError ? 'alert' : 'status'} aria-live="polite" className={`text-sm text-center ${isError ? 'text-red-400' : 'text-emerald-400'}`}>
             {message}
           </p>
         )}
