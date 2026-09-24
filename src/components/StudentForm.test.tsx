@@ -38,6 +38,14 @@ describe('StudentForm', () => {
     eq.mockReset()
   })
 
+  it('exposes every field through a visible label', () => {
+    render(<StudentForm editingStudent={null} onSaved={() => {}} onCancelEdit={() => {}} />)
+
+    expect(screen.getByRole('textbox', { name: /student name/i })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /grade level/i })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /notes/i })).toBeInTheDocument()
+  })
+
   it('inserts a new student when not editing', async () => {
     insert.mockResolvedValue({ error: null })
     const onSaved = vi.fn()
