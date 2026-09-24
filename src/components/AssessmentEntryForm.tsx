@@ -59,11 +59,14 @@ export default function AssessmentEntryForm({ students, skills, onSaved }: Asses
       onSubmit={handleSubmit}
       className="bg-slate-800 rounded p-4 mb-6 flex flex-col gap-3"
     >
+      <label htmlFor="assessment-student" className="text-sm font-semibold text-slate-200">Student</label>
       <select
+        id="assessment-student"
+        name="assessment-student"
         value={studentId}
         onChange={(e) => setStudentId(e.target.value)}
         required
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       >
         <option value="" disabled>
           Select student
@@ -75,11 +78,14 @@ export default function AssessmentEntryForm({ students, skills, onSaved }: Asses
         ))}
       </select>
 
+      <label htmlFor="assessment-skill" className="text-sm font-semibold text-slate-200">Skill</label>
       <select
+        id="assessment-skill"
+        name="assessment-skill"
         value={skillId}
         onChange={(e) => setSkillId(e.target.value)}
         required
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       >
         <option value="" disabled>
           Select skill
@@ -91,10 +97,13 @@ export default function AssessmentEntryForm({ students, skills, onSaved }: Asses
         ))}
       </select>
 
+      <label htmlFor="assessment-status" className="text-sm font-semibold text-slate-200">Mastery status</label>
       <select
+        id="assessment-status"
+        name="assessment-status"
         value={status}
         onChange={(e) => setStatus(e.target.value as AssessmentStatus)}
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       >
         {STATUS_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
@@ -103,7 +112,7 @@ export default function AssessmentEntryForm({ students, skills, onSaved }: Asses
         ))}
       </select>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
 
       <button
         type="submit"
