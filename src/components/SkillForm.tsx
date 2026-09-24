@@ -39,15 +39,18 @@ export default function SkillForm({ editingSkill, onSaved, onCancelEdit }: Skill
       onSubmit={handleSubmit}
       className="bg-slate-800 rounded p-4 mb-6 flex flex-col gap-3"
     >
+      <label htmlFor="skill-name" className="text-sm font-semibold text-slate-200">Skill name</label>
       <input
+        id="skill-name"
+        name="skill-name"
         type="text"
         placeholder="Skill name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        className="p-2 rounded bg-slate-700 text-white outline-none"
+        className="p-2 rounded bg-slate-700 text-white outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
       />
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
       <div className="flex gap-2">
         <button
           type="submit"
