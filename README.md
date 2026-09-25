@@ -40,10 +40,25 @@ Instead of keeping progress in disconnected notes or spreadsheets, the app links
 | Authentication | Supabase Auth |
 | Security | Row Level Security policies |
 | Testing | Vitest, Testing Library |
+| Browser testing | Playwright |
 | Deployment | Vercel |
 | Workflow | GitHub Issues, branches, pull requests |
 
 ## Engineering highlights
+
+### Architecture at a glance
+
+```mermaid
+flowchart LR
+    UI[React and TypeScript] --> SDK[Supabase client]
+    SDK --> Auth[Supabase Auth]
+    SDK --> DB[(PostgreSQL)]
+    DB --> RLS[Row Level Security and tenant constraints]
+    CI[GitHub Actions] --> Verify[Lint, tests, browser smoke tests, build]
+    Verify --> Deploy[Vercel]
+```
+
+See the detailed [architecture and data model](docs/architecture.md).
 
 ### Data isolation
 
@@ -103,13 +118,34 @@ The schema creates the core tables, tenant-aware foreign keys, indexes, and per-
 npm run dev
 npm test
 npm run test:watch
+npm run test:e2e
 npm run lint
 npm run build
 ```
 
+Playwright requires a local Chromium installation. Run `npx playwright install chromium` before the first local browser test.
+
+## Engineering documentation
+
+- [Architecture and data model](docs/architecture.md)
+- [Security decisions and production migration checklist](docs/security.md)
+- [Deployment and incident runbook](docs/runbook.md)
+- [Technical interview guide](docs/interview-guide.md)
+
+## Verification boundaries
+
+The automated suite contains 25 Vitest/Testing Library tests plus Playwright browser smoke tests for the public authentication interface. Schema regression tests verify the tenant protections checked into this repository. They do not prove that the latest SQL migration has been applied to a remote Supabase project; production migration verification requires database access and is documented separately.
+
+## Known limitations
+
+- Live cross-account isolation still requires verification against a disposable staging or production Supabase project.
+- The browser tests intentionally avoid creating accounts in the live service.
+- This demonstration uses fictional records and is not presented as a FERPA-compliant student-information system.
+- Operational monitoring and larger-dataset performance testing remain future work.
+
 ## Current status
 
-Core application functionality is implemented and deployed. Remaining work is focused on final production QA and future enhancements rather than establishing the basic product workflow.
+Core application functionality is implemented and deployed. Repository-level tenant hardening, CI, component tests, and browser smoke tests are implemented. Applying and recording the tenant-hardening migration against the live Supabase project remains a separate deployment task.
 
 ## What this project demonstrates
 
