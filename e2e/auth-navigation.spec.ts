@@ -12,6 +12,8 @@ test.describe('public authentication experience', () => {
     await expect(page.getByRole('button', { name: 'Sign Up' })).toBeVisible()
 
     await page.keyboard.press('Tab')
+    await expect(page.getByRole('link', { name: /Explore Demo/ })).toBeFocused()
+    await page.keyboard.press('Tab')
     await expect(page.getByRole('textbox', { name: 'Email address' })).toBeFocused()
   })
 
