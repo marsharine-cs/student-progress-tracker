@@ -73,6 +73,7 @@ function Auth() {
         onSubmit={handleSubmit}
         className="bg-slate-800 p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
       >
+        <a href="?demo=1" className="bg-emerald-700 hover:bg-emerald-600 text-white text-center p-3 rounded font-semibold focus-visible:ring-2 focus-visible:ring-white">Explore Demo — no account needed</a>
         <h1 className="text-2xl font-bold text-white text-center">{TITLES[mode]}</h1>
 
         <label htmlFor="email" className="text-sm font-semibold text-slate-200">Email address</label>

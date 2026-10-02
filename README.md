@@ -4,7 +4,7 @@
 
 A full-stack classroom application for recording assessment evidence, tracking skill mastery, and helping teachers quickly identify where students need support.
 
-**Live demo:** https://student-progress-tracker-sepia.vercel.app
+**Live demo:** https://student-progress-tracker-sepia.vercel.app/?demo=1
 
 > All student names and records in this project are fictional. No real student information is used in the demo or repository.
 
@@ -13,6 +13,10 @@ A full-stack classroom application for recording assessment evidence, tracking s
 As an educator, I routinely use assessment results to decide who has mastered a skill, who is partially there, and who needs reteaching. This project turns that classroom workflow into a database-backed application.
 
 Instead of keeping progress in disconnected notes or spreadsheets, the app links **students, skills, and dated assessment evidence** and summarizes the latest mastery status in a teacher-facing dashboard.
+
+## Public portfolio demo
+
+The demo opens without registration and uses fictional classroom data in memory. Visitors can record assessments, inspect history, update the mastery grid, and reset the samples. It does not initialize Supabase or read/write account data. Refreshing clears demo changes. Use Log in / Create account to access the authenticated application.
 
 ## What the application does
 
@@ -134,7 +138,7 @@ Playwright requires a local Chromium installation. Run `npx playwright install c
 
 ## Verification boundaries
 
-The automated suite contains 25 Vitest/Testing Library tests plus Playwright browser smoke tests for the public authentication interface. Schema regression tests verify the tenant protections checked into this repository. They do not prove that the latest SQL migration has been applied to a remote Supabase project; production migration verification requires database access and is documented separately.
+The automated suite contains 27 Vitest/Testing Library tests plus Playwright browser smoke tests for the public authentication interface. Schema regression tests verify the tenant protections checked into this repository. They do not prove that the latest SQL migration has been applied to a remote Supabase project; production migration verification requires database access and is documented separately.
 
 ## Known limitations
 
